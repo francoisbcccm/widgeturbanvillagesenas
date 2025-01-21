@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget de Calcul de Financement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffffff;
+            padding: 10px;
+        }
+        h1 {
+            color: #a11d21;
+            font-size: 1.8em;
+        }
+        .widget {
+            background-color: rgba(244, 244, 244, 0.9);
+            border: 2px solid #a11d21;
+            border-radius: 10px;
+            padding: 15px;
+            max-width: 90%;
+            margin: auto;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        select, input, button, a {
+            width: 100%;
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #a11d21;
+            font-size: 1em;
+            text-decoration: none;
+            color: #333;
+            background-color: #ffffff;
+        }
+        button, a {
+            color: white;
+            background-color: #a11d21;
+        }
+        button:hover, a:hover {
+            background-color: #870d12;
+        }
+        .result {
+            margin-top: 15px;
+            font-size: 1.2em;
+            color: #a11d21;
+        }
+        .logo {
+            margin: 15px 0;
+        }
+        .logo img {
+            max-width: 150px;
+            height: auto;
+        }
+        .fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: explode 1.5s ease-out forwards;
+        }
+        @keyframes explode {
+            from {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translate(var(--x), var(--y)) scale(2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <img src="Logotype-EXE.jpg" alt="Urban Village">
+    </div>
+    <h1>Calculateur de Financement</h1>
+    <div class="widget">
+        <label for="villaChoice">Choix de la Villa :</label>
+        <select id="villaChoice">
+            <script>
+                const villas = [
+                    { name: "G1", price: 298200, plan: "https://drive.google.com/uc?id=13KsO8flDQ0VeRAY5WwRfWRhSvzBYXRfr" },
+                    { name: "G2", price: 332000, plan: "https://drive.google.com/uc?id=1UMUdHQnXcP22yUEqNE27iy2snVV1-U3K" },
+                    { name: "G3", price: 345500, plan: "https://drive.google.com/uc?id=1aSijTUvr4ZjiN0cEylRUqzZJ_TCnMjVY" },
+                    { name: "G4", price: 348300, plan: "https://drive.google.com/uc?id=15_kOaEOlJYBo_nPTIPCbp6xTl-ga9u_h" },
+                    { name: "G5", price: 344800, plan: "https://drive.google.com/uc?id=1ranHz5JVuU3QVWZuaG1cOSuoD6ExI-C9" },
+                    { name: "G6", price: 348000, plan: "https://drive.google.com/uc?id=1SnOzvYqrQ5x2jUX0EuRHfoncJmzPlZaI" },
+                    { name: "G7", price: 372200, plan: "https://drive.google.com/uc?id=1TgKbkza4DIc0mWiEiFBYCWi7ovOhk8E5" },
+                    { name: "G8", price: 384200, plan: "https://drive.google.com/uc?id=1fxw5TnWP4nDh9lUO3BkawN28Fe2i9glw" },
+                    { name: "G9", price: 372600, plan: "https://drive.google.com/uc?id=1K8WKH5byZs5e5QTe2lZ-xpzE24sj7azx" },
+                    { name: "G10", price: 372800, plan: "https://drive.google.com/uc?id=1vx1oXtL8oUyV4y0AJ3hwKArxml5vQxlO" },
+                    { name: "G11", price: 373200, plan: "https://drive.google.com/uc?id=1C5PgyalDqbyupFsiWqkE01XQtvw7-7IZ" },
+                    { name: "G12", price: 299500, plan: "https://drive.google.com/uc?id=1BttoOhSgCBLV5aw1j6iyeOj-5AtP9qZr" },
+                    { name: "G13", price: 342600, plan: "https://drive.google.com/uc?id=1cUK7raPhvvGz-W7obCHE8rDsCU1RH5RZ" },
+                    { name: "G14", price: 380000, plan: "https://drive.google.com/uc?id=1VE1BP4ZZx0A0vwwT7OiHAEo7zNliTTmq" },
+                    { name: "G15", price: 346700, plan: "https://drive.google.com/uc?id=157RnrqfXifTof-Z7tYckG0CC4Zv9__dY" },
+                    { name: "G16", price: 328200, plan: "https://drive.google.com/uc?id=1rPyn5Ks5OyZc7OOZGnjKD3SxqsXISGaM" },
+                    { name: "G17", price: 342500, plan: "https://drive.google.com/uc?id=1UQkw_YhLf1EXkb_IwWX7tooyAy3IhZPg" },
+                    { name: "G18", price: 350800, plan: "https://drive.google.com/uc?id=1LcHGn29_C5dAhNbXg_nZlSIku5djF2_9" },
+                    { name: "G19", price: 351900, plan: "https://drive.google.com/uc?id=1g3QJubbBPnHvqgKdSv3Tka1zqtJjsQra" },
+                    { name: "G20", price: 349800, plan: "https://drive.google.com/uc?id=1tzw1xXvhL--LvnegIlG5J9jKgbh7uvLQ" },
+                    { name: "G21", price: 348500, plan: "https://drive.google.com/uc?id=1LDHw0o5hxndwVrfLWirORvJRvMNyIE65" },
+                    { name: "G22", price: 349800, plan: "https://drive.google.com/uc?id=11kHsXru8BNCL9u2QfEP-xRA2YEnMT7Hu" },
+                    { name: "G23", price: 352800, plan: "https://drive.google.com/uc?id=1s9PQvwHNZosacT8E62h_n8fm6SeGwTEm" },
+                    { name: "G24", price: 345400, plan: "https://drive.google.com/uc?id=1s9PQvwHNZosacT8E62h_n8fm6SeGwTEm" }
+                ];
+                villas.forEach(villa => {
+                    document.write(`<option value="${villa.price}" data-plan="${villa.plan}">Villa ${villa.name} - ${villa.price.toLocaleString('fr-FR')} €</option>`);
+                });
+            </script>
+        </select>
+        <label for="downPayment">Apport (€) :</label>
+        <select id="downPayment">
+            <script>
+                for (let i = 5000; i <= 4000000; i += 5000) {
+                    document.write(`<option value="${i}">${i.toLocaleString('fr-FR')} €</option>`);
+                }
+            </script>
+        </select>
+        <label for="loanDuration">Durée (en années) :</label>
+        <select id="loanDuration">
+            <script>
+                for (let i = 5; i <= 25; i++) {
+                    document.write(`<option value="${i}" ${i === 25 ? "selected" : ""}>${i} ans</option>`);
+                }
+            </script>
+        </select>
+        <label for="interestRate">Taux d'intérêt annuel (%) :</label>
+        <select id="interestRate">
+            <script>
+                for (let i = 2; i <= 4; i += 0.05) {
+                    const rate = i.toFixed(2);
+                    document.write(`<option value="${rate}" ${rate === "3.25" ? "selected" : ""}>${rate.replace('.', ',')} %</option>`);
+                }
+            </script>
+        </select>
+        <button onclick="calculateLoan()">Calculer</button>
+        <div class="result" id="result"></div>
+        <a id="viewPlanButton" href="#" target="_blank" style="display:none;">Découvrir les plans de la villa</a>
+    </div>
+    <div class="fireworks" id="fireworks"></div>
+    <script>
+        function calculateLoan() {
+            const villa = document.getElementById('villaChoice');
+            const selectedOption = villa.options[villa.selectedIndex];
+            const villaName = selectedOption.text.split(' ')[1];
+            const loanAmount = parseFloat(villa.value);
+            const downPayment = parseFloat(document.getElementById('downPayment').value);
+            const durationYears = parseFloat(document.getElementById('loanDuration').value);
+            const durationMonths = durationYears * 12;
+            const rate = parseFloat(document.getElementById('interestRate').value) / 100 / 12;
+
+            if (!loanAmount || !downPayment || !durationMonths || !rate) {
+                document.getElementById('result').innerText = "Veuillez remplir tous les champs correctement.";
+                return;
+            }
+
+            const financedAmount = loanAmount - downPayment;
+            if (financedAmount <= 0) {
+                document.getElementById('result').innerText = "L'apport dépasse le montant du prêt.";
+                return;
+            }
+
+            const monthlyPayment = (financedAmount * rate) / (1 - Math.pow(1 + rate, -durationMonths));
+            document.getElementById('result').innerHTML = `
+                Pour votre <strong>Villa ${villaName}</strong>,<br>
+                seulement <strong>${monthlyPayment.toFixed(2)} €</strong> par mois !
+            `;
+
+            const planLink = selectedOption.getAttribute('data-plan');
+            const viewPlanButton = document.getElementById('viewPlanButton');
+            if (planLink) {
+                viewPlanButton.href = planLink;
+                viewPlanButton.style.display = "block";
+            } else {
+                viewPlanButton.style.display = "none";
+            }
+
+            launchFireworks();
+        }
+
+        function launchFireworks() {
+            const container = document.getElementById('fireworks');
+            container.innerHTML = '';
+            const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange'];
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const centerX = Math.random() * window.innerWidth;
+                    const centerY = Math.random() * window.innerHeight;
+                    for (let j = 0; j < 200; j++) {
+                        const particle = document.createElement('div');
+                        particle.className = 'particle';
+                        const angle = Math.random() * 2 * Math.PI;
+                        const distance = Math.random() * 150;
+                        particle.style.setProperty('--x', `${Math.cos(angle) * distance}px`);
+                        particle.style.setProperty('--y', `${Math.sin(angle) * distance}px`);
+                        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                        particle.style.top = `${centerY}px`;
+                        particle.style.left = `${centerX}px`;
+                        container.appendChild(particle);
+                    }
+                }, i * 400);
+            }
+            setTimeout(() => container.innerHTML = '', 2500);
+        }
+    </script>
+</body>
+</html>
